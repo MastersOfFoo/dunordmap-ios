@@ -2,14 +2,20 @@ class RootController < UIViewController
   def viewDidLoad
     super
 
-    @menu_items = { :buildings => 'Nearby Buildings', :search => 'Search a Building',
-                    :tour => 'Take a tour', :food => 'Nearby Food Venues',
-                    :computers => 'Nearby Computer Rooms' }
+    @menu_items = { :buildings => 'Buildings nearby', :search => 'Search a building',
+                    :tour => 'Take a tour', :food => 'Food venues nearby',
+                    :computers => 'Computer rooms nearby' }
 
     @table = UITableView.alloc.initWithFrame(self.view.bounds, style:UITableViewStyleGrouped)
     @table.dataSource = @table.delegate = self
+    @table.backgroundView = nil
+    @table.backgroundColor = "#EEEDE4".to_color
+    @table.separatorColor = "#9C9C9C".to_color
 
     self.view.addSubview @table
+
+    back_button = UIBarButtonItem.alloc.initWithTitle("Back", style:UIBarButtonItemStylePlain, target:nil, action:nil)
+    self.navigationItem.backBarButtonItem = back_button
     self.title = "Du Nord Map"
   end
 
@@ -21,8 +27,11 @@ class RootController < UIViewController
     end
 
     cell.textLabel.text = @menu_items.values[indexPath.row]
-    #cell.imageView.image = UIImage.imageNamed:("image.png")
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.textLabel.textColor = "#7F7F7F".to_color
+    cell.textLabel.font = UIFont.fontWithName("Helvetica-Bold", size: 14)
+    cell.imageView.image = UIImage.imageNamed("icon_#{@menu_items.keys[indexPath.row]}.png")
+    cell.contentView.backgroundColor = "#F4F5F6".to_color
+    cell.accessoryView = UIImageView.alloc.initWithImage(UIImage.imageNamed("arrow.png"))
     cell
   end
 

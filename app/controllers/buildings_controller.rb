@@ -4,9 +4,13 @@ class BuildingsController < UIViewController
     @buildings = []
     @table = UITableView.alloc.initWithFrame(self.view.bounds, style:UITableViewStyleGrouped)
     @table.dataSource = @table.delegate = self
+    @table.backgroundView = nil
+    @table.backgroundColor = "#EEEDE4".to_color
+    @table.separatorColor = "#9C9C9C".to_color
+
     self.view.addSubview(@table)
 
-    self.title = "Nearby Buildings"
+    self.title = "Buildings nearby"
 
     load_buildings
   end
@@ -19,7 +23,10 @@ class BuildingsController < UIViewController
     end
 
     cell.textLabel.text = @buildings[indexPath.row].name
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator
+    cell.textLabel.textColor = "#7F7F7F".to_color
+    cell.textLabel.font = UIFont.fontWithName("Helvetica-Bold", size: 14)
+    cell.contentView.backgroundColor = "#F4F5F6".to_color
+    cell.accessoryView = UIImageView.alloc.initWithImage(UIImage.imageNamed("arrow.png"))
     cell
   end
 
