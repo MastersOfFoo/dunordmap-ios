@@ -1,6 +1,6 @@
-class Building < Maglev::Model
-  remote_attributes :name, :photo_url, :history
+class Building < RemoteModule::RemoteModel
+  attr_accessor :name
 
-  collection_path '/buildings'
-  member_path '/buildings/:id'
+  collection_url '/buildings'
+  member_url '/buildings/:id'
 end

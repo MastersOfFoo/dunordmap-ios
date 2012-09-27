@@ -3,11 +3,6 @@ class AppDelegate
 
     # Hide status bar inmediatly after of start
     # UIApplication.sharedApplication.setStatusBarHidden(true, animated:false)
-
-    # Setup API end-point
-    Maglev::API.setup do
-      root 'http://localhost:3000'
-    end
     
     # Update GPS coordinates each five seconds
     timer = EM.add_periodic_timer 5.0 do
@@ -20,7 +15,6 @@ class AppDelegate
           # failure
         end
       end
-      puts App::Persistence['coordinates']
     end
 
     # Setup main window
