@@ -37,10 +37,8 @@ class RootController < UIViewController
   end
 
   def open_buildings
-    alert = UIAlertView.alloc.init
-    alert.message = "This should redirect to buildings controller"
-    alert.addButtonWithTitle "OK"
-    alert.show
+    new_controller = BuildingsController.alloc.initWithNibName(nil, bundle: nil)
+    self.navigationController.pushViewController(new_controller, animated: true)
   end
 
   def open_search
