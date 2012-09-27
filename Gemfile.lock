@@ -15,10 +15,15 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    colored (1.2)
     formotion (1.1)
       bubble-wrap (>= 1.1.2)
+    motion-live (0.1)
+      colored (~> 1.2)
+      rb-fsevent (~> 0.9.1)
     motion_support (0.0.6)
       bubble-wrap
+    rb-fsevent (0.9.2)
 
 PLATFORMS
   ruby
@@ -27,3 +32,4 @@ DEPENDENCIES
   bubble-wrap!
   formotion
   maglev!
+  motion-live
