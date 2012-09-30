@@ -11,4 +11,6 @@ Motion::Project::App.setup do |app|
   app.name = 'DuNordMap'
   app.frameworks += ['CoreLocation']
   #app.info_plist['UIStatusBarHidden'] = true
+  app.prerendered_icon = true
+  app.icons = %w{Icon-57.png Icon-114.png}
 end
