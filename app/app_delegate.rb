@@ -43,7 +43,7 @@ class AppDelegate
     @window.makeKeyAndVisible
 
     # Make the splash screen to fade out after of five seconds
-    fade_out_timer = 1.0
+    fade_out_timer = 3.0
     UIView.transitionWithView(@window, duration: fade_out_timer, options: UIViewAnimationOptionTransitionNone, animations: lambda { image_view.alpha = 0 }, completion: lambda do |finished|
       image_view.removeFromSuperview
       image_view = nil
