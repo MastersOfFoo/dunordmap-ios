@@ -11,10 +11,11 @@ class RootController < UIViewController
   def menu_table_view
     @menu_table_view ||= begin
       table_view = UITableView.alloc.initWithFrame(self.view.bounds, style: UITableViewStyleGrouped)
+      table_view.contentInset = UIEdgeInsetsMake(25, 0, 0, 0)
       table_view.dataSource = table_view.delegate = self
       table_view.backgroundView = nil
       table_view.backgroundColor = "#EEEDE4".to_color
-      table_view.separatorColor = "#9C9C9C".to_color
+      table_view.rowHeight = 50
       table_view
     end
   end
@@ -35,6 +36,7 @@ class RootController < UIViewController
     cell.contentView.backgroundColor = "#F1F2F4".to_color
     cell.accessoryView = UIImageView.alloc.initWithImage(UIImage.imageNamed("arrow.png"))
     cell.accessoryView.backgroundColor = UIColor.clearColor
+    #cell.imageView.layer.cornerRadius = 5.0
     cell
   end
 
@@ -50,7 +52,6 @@ class RootController < UIViewController
 
   def open(controller_name)
     begin
-      NSLog(controller_name)
       controller_class = Module.const_get("#{controller_name.capitalize}Controller")
       new_controller = controller_class.alloc.initWithNibName(nil, bundle: nil)
       self.navigationController.pushViewController(new_controller, animated: true)

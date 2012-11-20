@@ -38,8 +38,7 @@ class AppDelegate
     EM.add_periodic_timer 5.0 do
       BW::Location.get do |result|
         if result[:to]
-          App::Persistence['coordinates'] = [11.0088768005371, -74.8357238769531]
-          # App::Persistence['coordinates'] = [result[:to].latitude, result[:to].longitude]
+          App::Persistence['coordinates'] = [result[:to].latitude, result[:to].longitude]
         else
           UIAlertView.alloc.initWithTitle("Error", message:"Couldn't get current location",
             delegate: nil, cancelButtonTitle: "ok", otherButtonTitles: nil).show
