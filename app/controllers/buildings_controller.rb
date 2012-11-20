@@ -1,25 +1,30 @@
 class BuildingsController < UIViewController
+  attr_accessor :table_view, :buildings
+
   def viewDidLoad
     super
-    @buildings = []
-    @table = UITableView.alloc.initWithFrame(self.view.bounds, style:UITableViewStyleGrouped)
-    @table.dataSource = @table.delegate = self
-    @table.backgroundView = nil
-    @table.backgroundColor = "#EEEDE4".to_color
-    @table.separatorColor = "#9C9C9C".to_color
-
-    self.view.addSubview(@table)
-
+    self.buildings = []
+    self.view.addSubview(table_view)
     self.title = "Buildings nearby"
-
     load_buildings
+  end
+  
+  def table_view
+    @table_view ||= begin
+      table_view = UITableView.alloc.initWithFrame(self.view.bounds, style:UITableViewStyleGrouped)
+      table_view.dataSource = table_view.delegate = self
+      table_view.backgroundView = nil
+      table_view.backgroundColor = "#EEEDE4".to_color
+      table_view.separatorColor = "#9C9C9C".to_color
+      table_view
+    end
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
     @reuseIdentifier ||= "CELL_IDENTIFIER"
 
     cell = tableView.dequeueReusableCellWithIdentifier(@reuseIdentifier) || begin
-      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:@reuseIdentifier)
+      UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier: @reuseIdentifier)
     end
 
     cell.textLabel.text = @buildings[indexPath.row].name
@@ -30,50 +35,31 @@ class BuildingsController < UIViewController
     cell
   end
 
-  def tableView(tableView, numberOfRowsInSection:section)
-    @buildings.size
+  def tableView(tableView, numberOfRowsInSection: section)
+    self.buildings.size
   end
 
-  def tableView(tableView, didSelectRowAtIndexPath:indexPath)
+  def tableView(tableView, didSelectRowAtIndexPath: indexPath)
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-
-    open_building_details(@buildings[indexPath.row])
+    open_building_details(self.buildings[indexPath.row])
   end
-
-  def open_building_details(building)
-    alert = UIAlertView.alloc.init
-    alert.message = "#{building.name} clicked"
-    alert.addButtonWithTitle "OK"
-    alert.show
-  end
-
 
   private
 
+  def open_building_details(building)
+    details_controller = BuildingDetailsController.alloc.initWithNibName(nil, bundle: nil)
+    details_controller.building = building
+    self.navigationController.pushViewController(details_controller, animated: true)
+  end
+
   def load_buildings
-    # Set an activity indicator while we load data from network
-    show_activity_indicator
-    Building.find_all do |buildings|
-      @buildings.clear
+    latitude, longitude = App::Persistence['coordinates']
+    self.buildings.clear
+    Building.search(latitude, longitude) do |buildings|
       buildings.each do |building|
-        @buildings << building
+        self.buildings << building
       end
-      show_buildings_list
+      table_view.reloadData
     end
-  end
-
-  def show_buildings_list
-    # Reload table data
-    @table.reloadData
-
-    # Remove activity indicator
-    @activityIndicator.removeFromSuperview
-  end
-
-  def show_activity_indicator
-    @activityIndicator = UIActivityIndicatorView.alloc.initWithActivityIndicatorStyle(UIActivityIndicatorViewStyleGray)
-    @activityIndicator.frame = CGRectMake(0.0, 0.0, 40.0, 40.0) # TODO: fix for Retina
-    @activityIndicator.center = self.view.center
-    self.view.addSubview(@activityIndicator)
   end
 end
