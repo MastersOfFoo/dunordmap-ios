@@ -1,4 +1,4 @@
 source :rubygems
 
-gem 'bubble-wrap', :git => "git://github.com/rubymotion/BubbleWrap.git"
-gem 'remote_model'
+gem "bubble-wrap", :github => "rubymotion/BubbleWrap"
+gem "remote_model", :path => "~/code/remote_model"

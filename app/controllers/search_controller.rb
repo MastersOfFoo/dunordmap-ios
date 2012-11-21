@@ -1,11 +1,11 @@
-class BuildingsController < UIViewController
+class SearchController < UIViewController
   attr_accessor :table_view, :buildings
 
   def viewDidLoad
     super
     self.buildings = []
     self.view.addSubview(table_view)
-    self.title = "Buildings nearby"
+    self.title = "Search Buildings"
     load_buildings
   end
   
@@ -53,9 +53,8 @@ class BuildingsController < UIViewController
   end
 
   def load_buildings
-    latitude, longitude = App::Persistence['coordinates']
     self.buildings.clear
-    Building.search(latitude, longitude) do |buildings|
+    Building.find_all do |buildings|
       buildings.each do |building|
         self.buildings << building
       end

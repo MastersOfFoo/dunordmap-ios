@@ -1,22 +1,23 @@
 class RootController < UIViewController
   def viewDidLoad
     super
+    self.view.addSubview(menu_table_view)
 
-    @menu_items = { :buildings => 'Buildings nearby', :search => 'Search a building',
-                    :tour => 'Take a tour', :food => 'Food venues nearby',
-                    :computers => 'Computer rooms nearby' }
-
-    @table = UITableView.alloc.initWithFrame(self.view.bounds, style:UITableViewStyleGrouped)
-    @table.dataSource = @table.delegate = self
-    @table.backgroundView = nil
-    @table.backgroundColor = "#EEEDE4".to_color
-    @table.separatorColor = "#9C9C9C".to_color
-
-    self.view.addSubview @table
-
-    back_button = UIBarButtonItem.alloc.initWithTitle("Back", style:UIBarButtonItemStylePlain, target:nil, action:nil)
+    back_button = UIBarButtonItem.alloc.initWithTitle("Back", style: UIBarButtonItemStylePlain, target: nil, action: nil)
     self.navigationItem.backBarButtonItem = back_button
     self.title = "Du Nord Map"
+  end
+  
+  def menu_table_view
+    @menu_table_view ||= begin
+      table_view = UITableView.alloc.initWithFrame(self.view.bounds, style: UITableViewStyleGrouped)
+      table_view.contentInset = UIEdgeInsetsMake(25, 0, 0, 0)
+      table_view.dataSource = table_view.delegate = self
+      table_view.backgroundView = nil
+      table_view.backgroundColor = "#EEEDE4".to_color
+      table_view.rowHeight = 50
+      table_view
+    end
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
@@ -26,55 +27,44 @@ class RootController < UIViewController
       UITableViewCell.alloc.initWithStyle(UITableViewCellStyleDefault, reuseIdentifier:@reuseIdentifier)
     end
 
-    cell.textLabel.text = @menu_items.values[indexPath.row]
+    cell.textLabel.text = menu_items.values[indexPath.row]
     cell.textLabel.textColor = "#7F7F7F".to_color
+    cell.textLabel.backgroundColor = UIColor.clearColor;
     cell.textLabel.font = UIFont.fontWithName("Helvetica-Bold", size: 14)
-    cell.imageView.image = UIImage.imageNamed("icon_#{@menu_items.keys[indexPath.row]}.png")
-    cell.contentView.backgroundColor = "#F4F5F6".to_color
+    cell.imageView.image = UIImage.imageNamed("icon_#{menu_items.keys[indexPath.row]}.png")
+    cell.imageView.setOpaque(false)
+    cell.contentView.backgroundColor = "#F1F2F4".to_color
     cell.accessoryView = UIImageView.alloc.initWithImage(UIImage.imageNamed("arrow.png"))
+    cell.accessoryView.backgroundColor = UIColor.clearColor
+    #cell.imageView.layer.cornerRadius = 5.0
     cell
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    @menu_items.size
+    menu_items.size
   end
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
     
-    self.send("open_#{@menu_items.keys[indexPath.row]}")
+    open(menu_items.keys[indexPath.row])
   end
 
-  def open_buildings
-    new_controller = BuildingsController.alloc.initWithNibName(nil, bundle: nil)
-    self.navigationController.pushViewController(new_controller, animated: true)
+  def open(controller_name)
+    begin
+      controller_class = Module.const_get("#{controller_name.capitalize}Controller")
+      new_controller = controller_class.alloc.initWithNibName(nil, bundle: nil)
+      self.navigationController.pushViewController(new_controller, animated: true)
+    rescue NameError
+      alert = UIAlertView.alloc.init
+      alert.message = "Unimplemented option #{controller_name}"
+      alert.addButtonWithTitle "OK"
+      alert.show
+    end
   end
 
-  def open_search
-    alert = UIAlertView.alloc.init
-    alert.message = "Unimplemented option"
-    alert.addButtonWithTitle "OK"
-    alert.show
-  end
-
-  def open_tour
-    alert = UIAlertView.alloc.init
-    alert.message = "Unimplemented option"
-    alert.addButtonWithTitle "OK"
-    alert.show
-  end
-
-  def open_food
-    alert = UIAlertView.alloc.init
-    alert.message = "Unimplemented option"
-    alert.addButtonWithTitle "OK"
-    alert.show
-  end
-
-  def open_computers
-    alert = UIAlertView.alloc.init
-    alert.message = "Unimplemented option"
-    alert.addButtonWithTitle "OK"
-    alert.show
+  def menu_items
+    { :buildings => 'Buildings nearby', :search => 'Search a building',
+      :tour => 'Take a tour', :food => 'Food venues nearby', :computers => 'Computer rooms nearby' }
   end
 end
