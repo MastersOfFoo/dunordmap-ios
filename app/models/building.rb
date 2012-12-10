@@ -1,5 +1,5 @@
 class Building < RemoteModule::RemoteModel
-  attr_accessor :latitude, :longitude, :name, :history, :image
+  attr_accessor :latitude, :longitude, :name, :history, :image, :places
 
   collection_url 'buildings'
   member_url 'buildings/:id'

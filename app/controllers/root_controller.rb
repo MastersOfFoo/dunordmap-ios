@@ -3,11 +3,12 @@ class RootController < UIViewController
     super
     self.view.addSubview(menu_table_view)
 
-    back_button = UIBarButtonItem.alloc.initWithTitle("Back", style: UIBarButtonItemStylePlain, target: nil, action: nil)
+    back_button = UIBarButtonItem.alloc.initWithTitle("Back", style:UIBarButtonItemStylePlain, target:nil, action:nil)
+    back_button.setTitlePositionAdjustment(UIOffsetMake(10.0, 50.0), forBarMetrics: UIBarMetricsDefault)
     self.navigationItem.backBarButtonItem = back_button
     self.title = "Du Nord Map"
   end
-  
+
   def menu_table_view
     @menu_table_view ||= begin
       table_view = UITableView.alloc.initWithFrame(self.view.bounds, style: UITableViewStyleGrouped)
@@ -36,7 +37,6 @@ class RootController < UIViewController
     cell.contentView.backgroundColor = "#F1F2F4".to_color
     cell.accessoryView = UIImageView.alloc.initWithImage(UIImage.imageNamed("arrow.png"))
     cell.accessoryView.backgroundColor = UIColor.clearColor
-    #cell.imageView.layer.cornerRadius = 5.0
     cell
   end
 
@@ -46,7 +46,7 @@ class RootController < UIViewController
 
   def tableView(tableView, didSelectRowAtIndexPath:indexPath)
     tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    
+
     open(menu_items.keys[indexPath.row])
   end
 
@@ -65,6 +65,6 @@ class RootController < UIViewController
 
   def menu_items
     { :buildings => 'Buildings nearby', :search => 'Search a building',
-      :tour => 'Take a tour', :food => 'Food venues nearby', :computers => 'Computer rooms nearby' }
+      :tour => 'Take a tour', :food => 'Food venues', :computers => 'Computer rooms' }
   end
 end
